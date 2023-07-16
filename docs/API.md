@@ -51,3 +51,21 @@ Team{
 	int cached_ranking;
 }
 ```
+
+
+```java
+/login Input: String username / String email & String hashed_password
+		Output: success_or_not + token
+
+/regsiter Input: String username & String mailbox & String hashed_password
+		Output: success_or_not
+
+/userview Input: username
+			Output: exclude hashed_password
+/problemview Input: problemID
+			Output: exclude flag
+/problemlist Input: null
+			Output: all problem ID
+/submit	Input: token, problemID, flag, 
+			Output: success_or_not
+```
