@@ -3,12 +3,13 @@ import org.apache.catalina.connector.Response;
 import org.springframework.http.ResponseEntity;
 
 import com.ddteam.JCTFS.models.Result;
+import com.ddteam.JCTFS.models.SolveRecord;
 
 public class User {
 	int ID;
 	boolean isAdmin;
 	int TeamID; // ID of team he belongs to.
-	int SolveProblemID[]; // ID of problems he solved;
+	SolveRecord[] records; // ID of problems he solved;
 	String nickname; 
 	String username;
 	String hashed_passwd, salt; // password which have been hashed by salt; (hex form)

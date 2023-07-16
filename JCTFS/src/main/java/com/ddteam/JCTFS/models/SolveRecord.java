@@ -2,8 +2,11 @@ package com.ddteam.JCTFS.models;
 import java.util.Date;
 
 public class SolveRecord {
-    int user_id;
+    int records_id;
     int problem_id;
-    int solve_rank;
-    Date solve_time;
+    int user_id;
+    String submit_flag;
+    Date submit_time;
+
+    // static  
 }

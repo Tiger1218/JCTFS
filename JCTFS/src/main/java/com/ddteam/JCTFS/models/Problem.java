@@ -6,5 +6,4 @@ public class Problem {
     int score;
     String flag;
     SolveRecord[] records;
-    
 }

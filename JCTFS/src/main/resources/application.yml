@@ -1,7 +1,7 @@
 spring:
   datasource:
-    driver-class-name: com.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3306/jctfs
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/jctfs
     username: jctfs
     password: jctfs
 
