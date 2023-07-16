@@ -42,3 +42,16 @@ buildNumber.properties
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+
+# workflow
+
+# Visual Studio Code
+
+.vscode/
+
+# IntelliJ project files 
+*.iml
+*.iws
+*.ipr
+.idea/
+
