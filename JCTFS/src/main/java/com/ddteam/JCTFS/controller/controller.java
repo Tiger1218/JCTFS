@@ -27,7 +27,7 @@ public class controller {
     @GetMapping("/devtest")
     public String devtest(){
         return "Hello, world";
-    }
+    }JCTFS/src/main/java/com/ddteam/JCTFS/models/SolveRecord.java
 
     // @RequestMapping(value = "/problemview", method = {RequestMethod.POST, RequestMethod.GET})
     // public ResponseEntity problemview(String problem_id){
