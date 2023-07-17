@@ -1,9 +1,11 @@
 package com.ddteam.JCTFS.models;
 
 public class Team{
-    int ID;
-    String TeamName;
-    String affiliation;
-    int score;
-    int cached_ranking;
+    int team_id;
+    int caption_user_id;
+    String hashed_team_passwd;
+    String team_name;
+    public int score(){
+        return 0;
+    }
 }

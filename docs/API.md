@@ -69,3 +69,15 @@ Team{
 /submit	Input: token, problemID, flag, 
 			Output: success_or_not
 ```
+
+
+```java
+/scoreboardview Input(null)
+		-> Output Array [team_id] by ranking
+/viewteam Input(int team_id)
+		-> Output Everything about the team
+/createteam Input(String token, String team_name, String hashed_team_passwd)
+		Output: Int team_id;
+/jointeam Input(String token, Int team_id, String hashed_team_passwd)
+		Output: Result
+```
