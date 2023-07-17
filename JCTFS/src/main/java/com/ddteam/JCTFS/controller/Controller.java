@@ -66,16 +66,11 @@ public class Controller {
                 result=new Result(1,"用户名或密码错误","");
             }
             result=new Result<String>(0,"登录成功",user.signToken());
-            return ResponseEntity<result>;
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            return ResponseEntity.ok(result);
         }catch(Exception e){
-            
+            Result result=new Result(1,"登录失败","");
+            return ResponseEntity.ok(result);
         }
-        Result result=new Result(1,"登录失败","");
-        return ResponseEntity.ok(result);
     }
     ResponseEntity<Result> register(String username, String email, String hashed_passwd, String salt){
         try {
@@ -94,14 +89,15 @@ public class Controller {
                 result=new Result(1,"用户已存在",user.signToken());
             }
             return ResponseEntity.ok(result);
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }catch(Exception e){
-            
+            Result result=new Result(1,"注册失败","");
+            return ResponseEntity.ok(result);
         }
-        Result result=new Result(1,"注册失败","");
-        return ResponseEntity.ok(result);
+    }
+    @RequestMapping(value = "/userview", method = {RequestMethod.POST, RequestMethod.GET})
+    public ResponseEntity<String> userview(String username){
+        User searched = userManage.select(username);
+        searched.hashed_passwd=searched.salt="";
+        return ResponseEntity.ok(JSON.toJSONString(searched));
     }
 }
