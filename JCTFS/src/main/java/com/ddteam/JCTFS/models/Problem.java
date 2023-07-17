@@ -14,6 +14,7 @@ public class Problem {
     static private RecordsManage recordsManage;
     public int problem_id;
     public int score;
+    public String desc;
     private String flag;
     public Record[] records;
     // @JSONField(serialize = false)
