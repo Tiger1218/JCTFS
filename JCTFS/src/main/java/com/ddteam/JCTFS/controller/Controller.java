@@ -15,6 +15,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSON;
 import com.ddteam.JCTFS.db.ProblemManage;
 import com.ddteam.JCTFS.db.RecordsManage;
+import com.ddteam.JCTFS.db.TeamManage;
 import com.ddteam.JCTFS.db.UserManage;
 import com.ddteam.JCTFS.models.Problem;
 import com.ddteam.JCTFS.models.User;
@@ -29,6 +30,8 @@ public class Controller {
     private RecordsManage recordsManage;
     @Autowired
     private UserManage userManage;
+    @Autowired
+    private TeamManage teamManage;
     @GetMapping("/devtest")
     public String devtest(){
         return "Hello, world";
@@ -48,12 +51,14 @@ public class Controller {
         new_object.put("problem_id_list", idlist);
         return ResponseEntity.ok(new_object.toString());
     }
+
     @RequestMapping(value = "/submit", method = {RequestMethod.POST, RequestMethod.GET})
     public ResponseEntity<String> submit(String token, int problemID, String flag){
         Record new_record = new Record(problemID, User.token_to_id(token), flag);
         return ResponseEntity.ok(JSON.toJSONString(recordsManage.submit(new_record)));
         // return ResponseEntity.ok(new_object.toString());
     }
+
     @PostMapping("/login")
     public ResponseEntity<Result> login(String username, String hashed_passwd, String salt){
         try {
@@ -103,5 +108,24 @@ public class Controller {
         }
         Result result=new Result(1,"注册失败","");
         return ResponseEntity.ok(result);
+    }
+
+    @RequestMapping(value = "/createteam", method = {RequestMethod.POST, RequestMethod.GET})
+    public ResponseEntity<String> createteam(String token, String team_name, String hashed_team_passwd){
+        return ResponseEntity.ok(JSON.toJSONString(teamManage.addteam(User.token_to_id(token), hashed_team_passwd, team_name)));
+    }
+
+    @RequestMapping(value = "/viewteam", method = {RequestMethod.POST, RequestMethod.GET})
+    public ResponseEntity<String> viewteam(int team_id){
+        return ResponseEntity.ok(JSON.toJSONString(teamManage.selectteam_by_id(team_id)));
+    }
+
+    @RequestMapping(value = "/jointeam", method = {RequestMethod.POST, RequestMethod.GET})
+    public ResponseEntity<String> jointeam(String token, int team_id, String hashed_team_passwd){
+        if(hashed_team_passwd != teamManage.selectteam_by_id(team_id).hashed_team_passwd){
+            return ResponseEntity.ok(JSON.toJSONString("...")); // TODO
+        } else {
+            return ResponseEntity.ok(JSON.toJSONString(teamManage.addteam(team_id, User.token_to_id(team_id))));
+        }
     }
 }

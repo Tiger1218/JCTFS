@@ -6,22 +6,20 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
+import com.ddteam.JCTFS.models.Team;
 import com.ddteam.JCTFS.models.User;
 
 @Repository
 public interface TeamManage {
-    // @Insert("insert into user (ID,username,email,hashed_passwd,salt) values (#{ID},#{username},#{email},#{hashed_passwd},#{salt})")
-    int add(User user);
-    // @Select("SELECT * FROM user WHERE user_id=#{user_id} limit 1")
-    User select(int user_id);
-    // @Select("SELECT * FROM user limit 1")
-    User select(User user);
-    // @Select("SELECT * FROM user")
-    int[] viewall();
-    @Select("SELECT COUNT(*) FROM user")
-    int count();
-    @Select("SELECT problem_id FROM records WHERE user_id=#{user_id}")
-    int[] solved(@Param("user_id") int user_id);
-    // @Update("UPDATE user")
-    // int update(int user_id);
+    @Insert("INSERT INTO teams (caption_user_id, hashed_team_passwd, team_name) VALUES (#{caption_user_id}, #{hashed_team_passwd}, #{team_name})")
+    int addteam(int caption_user_id, String hashed_team_passwd, String team_name);
+
+    @Select("SELECT * FROM teams WHERE team_id=#{team_id}")
+    Team selectteam_by_id(int team_id);
+
+    // @Select("SELECT LAST_INSERT_ID()");
+    // int last_insert_id();
+
+    @Update("UPDATE user SET team_id=#{change_team_id} WHERE user_id=#{user_id}")
+    int addteam(int change_team_id, int user_id);
 }
