@@ -1,0 +1,14 @@
+#!/bin/bash
+initcheck() {
+    [[ -e $(which javac) ]] || echo "Install JDK first !" # && exit 1
+    [[ -e $(which mvn) ]] || echo "Install Maven first !" # && exit 1
+    [[ -e $(which mysql) ]] || echo "Install mysql first !" # && exit 1
+}
+
+mysqlinit() {
+    username=$(grep username JCTFS/src/main/resources/application.yml | awk '{print $2}')
+    password=$(grep password JCTFS/src/main/resources/application.yml | awk '{print $2}')
+    mysql -u"$username" -p"$password" jctfs < init.sql 
+}
+initcheck;
+mysqlinit;
