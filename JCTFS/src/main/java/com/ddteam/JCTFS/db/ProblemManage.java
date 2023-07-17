@@ -14,5 +14,7 @@ public interface ProblemManage {
     Problem select(int problem_id);
     @Select("SELECT problem_id FROM problems")
     int[] viewall();
+    @Insert("INSERT INTO problems (score, desc, flag) VALUES (#{score}, #{desc}, #{flag})")
+    int add(Problem problem);
 
 }
