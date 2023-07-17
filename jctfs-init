@@ -8,7 +8,11 @@ initcheck() {
 mysqlinit() {
     username=$(grep username JCTFS/src/main/resources/application.yml | awk '{print $2}')
     password=$(grep password JCTFS/src/main/resources/application.yml | awk '{print $2}')
-    mysql -u"$username" -p"$password" jctfs < init.sql 
+    if [[ $(mysql -u"$username" -p"$password" jctfs) == *"ERROR 1045"* ]]; then
+       echo "Username or Password wrong ! Please check application.yml"
+       exit 1
+    fi
+    mysql -uroot -p < init.sql
 }
 initcheck;
 mysqlinit;
