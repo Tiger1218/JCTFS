@@ -9,4 +9,12 @@ public class Result<T> {
         this.message = message;
         this.data = data;
     }
+    public static<T> Result<T> ok(String message, T data){
+        Result<T> result = new Result<T>(0, message, data);
+        return result;
+    }
+    public static<T> Result<T> error(String message, T data){
+        Result<T> result = new Result<T>(1, message, data);
+        return result;
+    }
 }

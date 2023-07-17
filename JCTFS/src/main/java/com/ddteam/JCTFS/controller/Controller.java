@@ -35,10 +35,18 @@ public class Controller {
     }
 
     @RequestMapping(value = "/problemview", method = {RequestMethod.POST, RequestMethod.GET})
-    public ResponseEntity<String> problemview(String problem_id){
+    public ResponseEntity<Result<String>> problemview(String problem_id){
         // TODO: Exception Handle
-        Problem searched = problemManage.select(Integer.parseInt(problem_id));
-        return ResponseEntity.ok(JSON.toJSONString(searched));
+        if(problem_id == null||"".equals(problem_id)){
+            return ResponseEntity.ok(Result.error("问题ID不能为空",""));
+        }
+        try{
+
+            Problem searched = problemManage.select(Integer.parseInt(problem_id));
+            return ResponseEntity.ok(Result.ok("查询成功",JSON.toJSONString(searched)));
+        }catch(Exception e){
+            return ResponseEntity.ok(Result.error("不存在的问题",""));
+        }
     }
 
     @RequestMapping(value = "/problemlist", method = {RequestMethod.POST, RequestMethod.GET})
@@ -49,55 +57,50 @@ public class Controller {
         return ResponseEntity.ok(new_object.toString());
     }
     @RequestMapping(value = "/submit", method = {RequestMethod.POST, RequestMethod.GET})
-    public ResponseEntity<String> submit(String token, int problemID, String flag){
-        Record new_record = new Record(problemID, User.token_to_id(token), flag);
-        return ResponseEntity.ok(JSON.toJSONString(recordsManage.submit(new_record)));
+    public ResponseEntity<Result<String>> submit(String token, int problemID, String flag){
+        try{
+            Record new_record = new Record(problemID, User.token_to_id(token), flag);
+            return ResponseEntity.ok(Result.error("提交成功",JSON.toJSONString(recordsManage.submit(new_record))));
+        }catch(Exception e){
+            // Result result=new Result(1,"登录失败","");
+            // return ResponseEntity.ok(result);
+            return ResponseEntity.ok(Result.error("无效提交请求",""));
+        }
+        
         // return ResponseEntity.ok(new_object.toString());
     }
     @PostMapping("/login")
     public ResponseEntity<Result> login(String username, String hashed_passwd, String salt){
-        try {
-            User user=new User();
-            user.username=username;
-            user.hashed_passwd=hashed_passwd;
-            user.salt=salt;
-            Result result;
-            if(userManage.select(user)==null){
-                result=new Result(1,"用户名或密码错误","");
-            }
-            result=new Result<String>(0,"登录成功",user.signToken());
-            return ResponseEntity.ok(result);
-        }catch(Exception e){
-            Result result=new Result(1,"登录失败","");
-            return ResponseEntity.ok(result);
-        }
+        User user=new User();
+        user.username=username;
+        user.hashed_passwd=hashed_passwd;
+        user.salt=salt;
+        return user.login();
     }
     ResponseEntity<Result> register(String username, String email, String hashed_passwd, String salt){
-        try {
-            User user=new User();
-            user.username=username;
-            
-            Result<String> result;
-            if(userManage.select(user)==null){
-                user.email=email;
-                user.hashed_passwd=hashed_passwd;
-                user.salt=salt;
-                user.ID=userManage.count()+1;
-                result=new Result(0,"注册成功",user.signToken());
-                userManage.add(user);
-            }else{
-                result=new Result(1,"用户已存在",user.signToken());
-            }
-            return ResponseEntity.ok(result);
-        }catch(Exception e){
-            Result result=new Result(1,"注册失败","");
-            return ResponseEntity.ok(result);
-        }
+        User user=new User();
+        user.username=username;
+        user.email=email;
+        user.hashed_passwd=hashed_passwd;
+        user.salt=salt;
+        user.ID=userManage.count()+1;
+        return user.register();
     }
     @RequestMapping(value = "/userview", method = {RequestMethod.POST, RequestMethod.GET})
-    public ResponseEntity<String> userview(String username){
-        User searched = userManage.select(username);
-        searched.hashed_passwd=searched.salt="";
-        return ResponseEntity.ok(JSON.toJSONString(searched));
+    public ResponseEntity<Result<String>> userview(String username){
+        try{
+            if(username==null||"".equals(username)){
+                // Result<String> result=new Result<String>(1,"请输入用户名","");
+                // return ResponseEntity.ok(result);
+                return ResponseEntity.ok(Result.error("请输入用户名",""));
+            }
+            User searched = userManage.select(username);
+            // searched.hashed_passwd=searched.salt="";
+            // Result<String> result=new Result<String>(0,"查询成功",JSON.toJSONString(searched.to_view_copy()));
+            return ResponseEntity.ok(Result.ok("查询成功",JSON.toJSONString(searched.to_view_copy())));
+
+        }catch(Exception e){
+            return ResponseEntity.ok(Result.error("用户不存在",""));
+        }
     }
 }

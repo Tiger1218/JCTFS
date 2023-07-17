@@ -30,11 +30,40 @@ public class User {
 	public String username;
 	public String hashed_passwd, salt; // password which have been hashed by salt; (hex form)
 	public String email;
-	ResponseEntity<Result> register(String username, String email, String hashed_passwd, String salt){
-        return ResponseEntity.status(200).body(null);
+	public ResponseEntity<Result> register(){
+        try {
+            
+            Result<String> result;
+            if(userManage.select(username)==null){
+                result=Result.ok("注册成功",signToken());
+                userManage.add(this);
+            }else{
+                result=Result.error("用户名已存在","");
+            }
+            return ResponseEntity.ok(result);
+        }catch(Exception e){
+            // Result result=new Result(1,"注册失败","");
+            // return ResponseEntity.ok(result);
+            return ResponseEntity.ok(Result.error("注册失败",""));
+        }
     }
-	ResponseEntity<Result> login(String username, String hashed_passwd, String salt){
-        return ResponseEntity.status(200).body(null);
+	public ResponseEntity<Result> login(){
+        try {
+            if(username==null){
+                return ResponseEntity.ok(Result.error("请输入用户名",""));
+            }
+            if(userManage.select(this)==null){
+                return ResponseEntity.ok(Result.error("用户名或密码错误",""));
+            }
+            // result=new Result<String>(0,"登录成功",user.signToken());
+            // return ResponseEntity.ok(result);
+            return ResponseEntity.ok(Result.ok("登录成功",signToken()));
+            
+        }catch(Exception e){
+            // Result result=new Result(1,"登录失败","");
+            // return ResponseEntity.ok(result);
+            return ResponseEntity.ok(Result.error("登录失败",""));
+        }
     }
 
 	private static final long TOKEN_EXP = 24 * 60 * 60 * 1000;//过期时间
@@ -51,7 +80,8 @@ public class User {
         //附带username信息的token
         return JWT.create().withClaim("ID",ID).withExpiresAt(date).sign(Algorithm.HMAC256(hashed_passwd));
     }
-	public User userview(){
+	public User to_view_copy(){
+		sync_with_database();
 		User res=this;
 		res.hashed_passwd=res.salt="";
 		return res;
